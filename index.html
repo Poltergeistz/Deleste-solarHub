@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Deleste SolarHub</title>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:           #eef2ec;
+      --surface:      rgba(255,255,255,0.55);
+      --surface-mid:  rgba(255,255,255,0.72);
+      --surface-high: rgba(255,255,255,0.88);
+      --text:         #1a1f18;
+      --muted:        rgba(26,31,24,0.5);
+      --border:       rgba(255,255,255,0.7);
+      --border-high:  rgba(255,255,255,0.9);
+      --ground-even:  #ddeedd;
+      --ground-odd:   #cce4cc;
+      --canvas-bg:    #eef2ec;
+
+      --grad-start:      #5db887;
+      --grad-end:        #7b74d8;
+      --grad-rgb-start:  93,184,135;
+      --grad-rgb-end:    123,116,216;
+      --gradient:     linear-gradient(110deg, var(--grad-start), var(--grad-end));
+
+      --radius-sm: 8px;
+      --radius:    14px;
+      --blur:      saturate(200%) blur(24px);
+      --shadow:    0 8px 32px rgba(0,0,0,0.12);
+      --shadow-sm: 0 2px 12px rgba(0,0,0,0.08);
+    }
+
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'EB Garamond', Georgia, serif;
+      -webkit-font-smoothing: antialiased;
+      touch-action: none;
+      transition: background 0.3s;
+    }
+
+    body::before, body::after {
+      content: '';
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.25;
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::before {
+      width: 600px; height: 600px;
+      background: var(--grad-start);
+      top: -200px; left: -150px;
+    }
+    body::after {
+      width: 500px; height: 500px;
+      background: var(--grad-end);
+      bottom: -150px; right: -100px;
+    }
+
+    #canvas-wrap {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    #canvas-main {
+      position: absolute;
+      top: 0; left: 0;
+      display: block;
+      cursor: grab;
+    }
+    #canvas-main:active { cursor: grabbing; }
+
+    #hud {
+      position: fixed; top: 0; left: 0; right: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.7rem 1.5rem;
+      background: var(--surface);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border-bottom: 1px solid var(--border);
+      z-index: 10;
+    }
+
+    #hud-logo {
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    #hud-logo img {
+      height: 20px;
+      opacity: 0.9;
+    }
+    [data-theme="dark"] #hud-logo img { filter: invert(1); }
+
+    #hud-title {
+      font-size: 0.8rem;
+      font-family: 'EB Garamond', serif;
+      letter-spacing: 0.12em;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-style: italic;
+    }
+
+    #hud-right {
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    #hud-sub {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    #sub-count {
+      font-size: 1rem;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hud-pill {
+      font-size: 0.65rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 99px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      background: var(--surface-mid);
+    }
+
+    #audio-toggle, #legend-toggle {
+      width: 32px; height: 32px;
+      background: var(--surface-mid);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem;
+      transition: background 0.15s;
+      -webkit-tap-highlight-color: transparent;
+      color: var(--text);
+    }
+    #audio-toggle:hover, #legend-toggle:hover {
+      background: var(--surface-high);
+    }
+    #legend-toggle {
+      font-family: 'EB Garamond', serif;
+      font-style: italic;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+    #legend-toggle.active {
+      background: var(--gradient);
+      color: #fff;
+      border-color: transparent;
+    }
+
+    #subscribe-link {
+      position: fixed; bottom: 1.2rem; left: 50%; transform: translateX(-50%);
+      z-index: 10;
+      display: flex; align-items: center; gap: 0.5rem;
+      background: var(--gradient);
+      color: #fff;
+      font-family: 'EB Garamond', serif;
+      font-size: 0.85rem;
+      font-style: italic;
+      letter-spacing: 0.06em;
+      padding: 0.5rem 1.4rem;
+      border-radius: 99px;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(91,184,135,0.3);
+      transition: opacity 0.15s, transform 0.15s;
+      white-space: nowrap;
+    }
+    #subscribe-link:hover { opacity: 0.9; transform: translateX(-50%) translateY(-1px); }
+
+    #tooltip {
+      position: fixed; z-index: 50; pointer-events: none;
+      background: var(--surface-high);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.75rem 1.1rem;
+      box-shadow: var(--shadow);
+      min-width: 180px;
+      opacity: 0; transform: translateY(8px) scale(0.97);
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      display: flex; flex-direction: column; gap: 0.2rem;
+    }
+    #tooltip.visible { opacity: 1; transform: translateY(0) scale(1); }
+    #tooltip .tt-pseudo { font-size: 1.05rem; color: var(--text); }
+    #tooltip .tt-tier   { font-size: 0.72rem; color: var(--muted); font-family: system-ui, sans-serif; }
+    #tooltip .tt-since  { font-size: 0.67rem; color: var(--muted); opacity: 0.7; font-family: system-ui, sans-serif; }
+    #tooltip .tt-line   { width: 28px; height: 1.5px; background: var(--gradient); margin: 0.25rem 0; border-radius: 2px; }
+
+    #zoom-controls {
+      position: fixed; bottom: 4.5rem; right: 1.2rem;
+      display: flex; flex-direction: column; gap: 0.4rem;
+      z-index: 10;
+    }
+    .zbtn {
+      width: 40px; height: 40px;
+      background: var(--surface);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: var(--shadow-sm);
+      color: var(--text);
+      transition: background 0.15s;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .zbtn:hover  { background: var(--surface-mid); }
+    .zbtn:active { background: var(--surface-high); }
+
+    #legend-modal {
+      position: fixed; inset: 0;
+      z-index: 100;
+      display: flex; align-items: flex-start; justify-content: flex-end;
+      padding-top: 3.6rem; padding-right: 1.2rem;
+      pointer-events: none;
+    }
+    #legend-modal.open { pointer-events: auto; }
+
+    #legend-backdrop {
+      position: absolute; inset: 0;
+      opacity: 0;
+      transition: opacity 0.18s;
+    }
+    #legend-modal.open #legend-backdrop { opacity: 1; }
+
+    #legend-panel {
+      position: relative; z-index: 1;
+      background: var(--surface-high);
+      backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+      border: 1px solid var(--border-high);
+      border-radius: var(--radius);
+      padding: 1rem 1.2rem;
+      min-width: 220px;
+      box-shadow: var(--shadow);
+      display: flex; flex-direction: column; gap: 0.55rem;
+      opacity: 0; transform: translateY(-6px) scale(0.97);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+    #legend-modal.open #legend-panel {
+      opacity: 1; transform: translateY(0) scale(1);
+    }
+
+    .legend-title {
+      font-family: 'EB Garamond', serif;
+      font-size: 0.85rem; font-style: italic;
+      color: var(--text); letter-spacing: 0.06em;
+      padding-bottom: 0.35rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0.1rem;
+    }
+    .legend-section { display: flex; flex-direction: column; gap: 0.3rem; }
+    .legend-section-title {
+      font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--muted); font-family: system-ui, sans-serif;
+    }
+    .li  { display: flex; align-items: center; gap: 0.55rem; font-size: 0.75rem; color: var(--text); font-family: system-ui, sans-serif; }
+    .ld  { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+    #dropzone {
+      position: fixed; top: 7.8rem; left: 50%; transform: translateX(-50%);
+      z-index: 20;
+      background: var(--surface);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border: 1px dashed var(--border);
+      border-radius: 99px;
+      padding: 0.4rem 1.4rem;
+      font-size: 0.7rem;
+      font-family: system-ui, sans-serif;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+      letter-spacing: 0.04em;
+    }
+    #dropzone:hover, #dropzone.drag-over {
+      background: var(--surface-mid);
+      border-color: var(--grad-start);
+      color: var(--text);
+      border-style: solid;
+    }
+
+
+    #search-wrap {
+      position: fixed; top: 4rem; left: 50%; transform: translateX(-50%);
+      z-index: 20;
+      display: flex; gap: 0.4rem;
+      width: min(340px, calc(100vw - 2rem));
+    }
+
+    #search-input {
+      flex: 1;
+      background: var(--surface);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 0.42rem 1rem;
+      font-size: 0.78rem;
+      font-family: 'EB Garamond', serif;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    #search-input::placeholder { color: var(--muted); }
+    #search-input:focus {
+      border-color: var(--grad-start);
+      background: var(--surface-mid);
+    }
+
+    #search-btn {
+      width: 34px; height: 34px;
+      background: var(--surface);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text);
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+    #search-btn:active { background: var(--surface-high); }
+
+    #search-results {
+      position: fixed; top: 6.5rem; left: 50%; transform: translateX(-50%);
+      z-index: 20;
+      width: min(340px, calc(100vw - 2rem));
+      background: var(--surface-high);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: none;
+      box-shadow: var(--shadow);
+    }
+    #search-results.visible { display: block; }
+    .sr-item {
+      padding: 0.55rem 1rem;
+      font-size: 0.8rem;
+      font-family: 'EB Garamond', serif;
+      color: var(--text);
+      cursor: pointer;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 0.5rem;
+      transition: background 0.1s;
+    }
+    .sr-item:last-child { border-bottom: none; }
+    .sr-item:hover, .sr-item:active { background: var(--surface-mid); }
+    .sr-meta { font-size: 0.68rem; color: var(--muted); margin-left: auto; }
+
+    #focus-card {
+      position: fixed;
+      bottom: 5rem; left: 50%; transform: translateX(-50%) translateY(12px);
+      z-index: 30;
+      width: min(300px, calc(100vw - 2rem));
+      background: var(--surface-high);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border: 1px solid var(--border-high);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    #focus-card.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+    }
+
+    #fc-artwork {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      position: relative;
+      background: var(--surface-mid);
+      display: flex; align-items: center; justify-content: center;
+    }
+    #fc-artwork img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    #fc-artwork .fc-artwork-placeholder {
+      font-size: 3rem;
+      opacity: 0.4;
+    }
+
+    .fc-body {
+      padding: 0.9rem 1.1rem;
+      display: flex; flex-direction: column; gap: 0.28rem;
+    }
+    #focus-card .fc-header {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    #focus-card .fc-pseudo {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.1rem; color: var(--text);
+    }
+    #focus-card .fc-close {
+      background: none; border: none;
+      color: var(--muted); font-size: 1rem;
+      cursor: pointer; padding: 0.1rem 0.3rem; line-height: 1;
+    }
+    #focus-card .fc-line {
+      width: 32px; height: 1.5px;
+      background: var(--gradient);
+      border-radius: 2px; margin: 0.1rem 0;
+    }
+    #focus-card .fc-tier  { font-size: 0.75rem; color: var(--muted); font-family: system-ui, sans-serif; }
+    #focus-card .fc-meta  { font-size: 0.7rem;  color: var(--muted); font-family: system-ui, sans-serif; opacity: 0.7; }
+    #focus-card .fc-level { font-size: 0.72rem; color: var(--muted); font-family: system-ui, sans-serif; }
+    #focus-card .fc-share { margin-top: 0.5rem; }
+    #focus-card .fc-btn {
+      width: 100%;
+      padding: 0.4rem 0;
+      font-size: 0.78rem;
+      font-family: 'EB Garamond', serif;
+      border-radius: 99px;
+      cursor: pointer;
+      text-align: center;
+      transition: opacity 0.15s;
+      display: flex; align-items: center; justify-content: center; gap: 0.3rem;
+      border: none;
+    }
+    #focus-card .fc-btn.primary {
+      background: var(--gradient); color: #fff;
+    }
+    #focus-card .fc-btn.primary:active { opacity: 0.85; }
+
+    @media (max-width: 600px) {
+      #focus-card { bottom: 4rem; }
+      #legend-modal { padding-right: 0; justify-content: stretch; }
+      #legend-panel { width: 100%; border-radius: 0 0 var(--radius) var(--radius); min-width: unset; }
+      #hud { padding: 0.55rem 0.9rem; }
+      #hud-logo img { height: 16px; }
+      #hud-title { display: none; }
+      .hud-pill  { display: none; }
+      #hud-sub   { font-size: 0.72rem; }
+      #zoom-controls { display: none; }
+      #subscribe-link {
+        bottom: 0.8rem;
+        left: 1rem; right: 1rem;
+        transform: none;
+        text-align: center;
+        justify-content: center;
+      }
+      #carbon { display: none; }
+      #dropzone { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="canvas-wrap">
+  <canvas id="canvas-main"></canvas>
+</div>
+
+<header id="hud">
+  <div id="hud-logo">
+    <img src="../Deleste_Logo_Transparent.png" alt="Deleste">
+    <span id="hud-title">SolarHub</span>
+  </div>
+  <div id="hud-right">
+    <span class="hud-pill">🌱 ville vivante</span>
+    <div id="hud-sub">
+      <span id="sub-count">—</span>
+      <span>abonnés</span>
+    </div>
+    <button id="legend-toggle" aria-label="Légende" title="Légende de la ville">?</button>
+    <button id="audio-toggle"  aria-label="Musique d'ambiance">🔇</button>
+  </div>
+</header>
+
+<audio id="ambient-audio" loop preload="none">
+  <source src="../ambient.mp3" type="audio/mpeg">
+</audio>
+
+<div id="tooltip">
+  <span class="tt-pseudo" id="tt-pseudo"></span>
+  <div class="tt-line"></div>
+  <span class="tt-tier"  id="tt-tier"></span>
+  <span class="tt-since" id="tt-since"></span>
+</div>
+
+<div id="zoom-controls">
+  <button class="zbtn" id="btn-in"  aria-label="Zoom avant">+</button>
+  <button class="zbtn" id="btn-out" aria-label="Zoom arrière">−</button>
+</div>
+
+<div id="legend-modal" role="dialog" aria-modal="true" aria-label="Légende de la ville">
+  <div id="legend-backdrop"></div>
+  <aside id="legend-panel">
+    <div class="legend-title">Légende de la ville</div>
+
+    <div class="legend-section">
+      <div class="legend-section-title">Membres</div>
+      <div class="li"><span class="ld" style="background:#f5f5f0;border:1px solid rgba(0,0,0,0.1)"></span>🌳 L'Arbre Ancien</div>
+      <div class="li"><span class="ld" style="background:#7ecfa0"></span>🌳 Free</div>
+      <div class="li"><span class="ld" style="background:#8b85e8"></span>☀️ Paid</div>
+      <div class="li"><span class="ld" style="background:#c4b0f0"></span>🏡 Founder</div>
+    </div>
+
+    <div class="legend-section">
+      <div class="legend-section-title">États</div>
+      <div class="li"><span class="ld" style="background:#a8e6bf"></span>✨ Nouveau · &lt; 30 jours</div>
+      <div class="li"><span class="ld" style="background:#4db87a"></span>🌿 Actif · engage régulièrement</div>
+      <div class="li"><span class="ld" style="background:rgba(200,200,200,0.3);border:1px solid rgba(0,0,0,0.1)"></span>😴 Dormant · inactif</div>
+      <div class="li"><span class="ld" style="background:#6b6040;opacity:.8"></span>♻️ Composté · désabonné</div>
+    </div>
+
+    <div class="legend-section">
+      <div class="legend-section-title">Parrainages</div>
+      <div class="li">🌱 Seed · aucun parrain</div>
+      <div class="li">🌿 Rooted · 1–2</div>
+      <div class="li">🌸 Flourishing · 3–5</div>
+      <div class="li">🌳 Steward · 6–14</div>
+      <div class="li">🏛️ Keystone · 15+</div>
+    </div>
+  </aside>
+</div>
+
+<div id="search-wrap">
+  <input id="search-input" type="search" placeholder="Chercher un abonné…" autocomplete="off" autocorrect="off">
+  <button id="search-btn" aria-label="Rechercher">🔍</button>
+</div>
+<div id="search-results"></div>
+
+<div id="dropzone" title="Clique ou dépose ton CSV Substack" style="display:none">
+  ↓ Importer CSV Substack
+</div>
+<input type="file" id="csv-input" accept=".csv" style="display:none">
+
+<div id="focus-card">
+  <div id="fc-artwork"></div>
+  <div class="fc-body">
+    <div class="fc-header">
+      <span class="fc-pseudo" id="fc-pseudo"></span>
+      <button class="fc-close" id="fc-close" aria-label="Fermer">✕</button>
+    </div>
+    <div class="fc-line"></div>
+    <span class="fc-tier"  id="fc-tier"></span>
+    <span class="fc-level" id="fc-level"></span>
+    <span class="fc-meta"  id="fc-meta"></span>
+    <div class="fc-share">
+      <button class="fc-btn primary" id="fc-share">↗ Partager mon spot</button>
+    </div>
+  </div>
+</div>
+
+<a id="subscribe-link" href="https://delesteprotocol.substack.com/subscribe" target="_blank" rel="noopener">
+  Rejoindre la ville →
+</a>
+
+
+<script src="config.js"></script>
+<script src="grid.js"></script>
+<script src="camera.js"></script>
+<script src="renderer.js"></script>
+<script src="tooltip.js"></script>
+<script src="csv.js"></script>
+<script src="ui.js"></script>
+</body>
+</html>
