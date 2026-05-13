@@ -210,8 +210,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function showResults(query) {
-    if (!query.trim()) { searchResults.classList.remove('visible'); return; }
-    const hits = grid.findByPseudo(query).slice(0, 6);
+    const hits = query.trim()
+      ? grid.findByPseudo(query).slice(0, 6)
+      : [...grid._cells.values()].filter(c => c.tier !== 'ancient').slice(0, 6);
     if (!hits.length) {
       searchResults.innerHTML = `<div class="sr-item" style="color:var(--muted)">Aucun résultat</div>`;
     } else {
@@ -240,6 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
     clearTimeout(searchTimer);
     searchTimer = setTimeout(() => showResults(e.target.value), 180);
   });
+  searchInput.addEventListener('focus', () => showResults(searchInput.value));
   searchBtn.addEventListener('click', () => showResults(searchInput.value));
   searchInput.addEventListener('keydown', e => {
     if (e.key === 'Enter') {
