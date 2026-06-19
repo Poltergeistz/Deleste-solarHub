@@ -1,168 +1,297 @@
 {
   "subscribers": [
     {
+      "id": "sub-0-david",
       "pseudo": "@David",
-      "tier": "founder",
+      "tier": "free",
       "state": "thriving",
-      "level": "L4",
+      "level": "L0",
       "since": "févr. 2026",
       "country": "FR",
-      "gifted": 15
-    },
-    {
-      "pseudo": "@Roso",
-      "tier": "free",
-      "state": "new",
-      "level": "L0",
-      "since": "mai 2026",
-      "country": "FR",
       "gifted": 0
     },
     {
-      "pseudo": "@Tom Thomas",
+      "id": "sub-1-jars",
+      "pseudo": "@Jars",
       "tier": "free",
       "state": "new",
       "level": "L0",
-      "since": "mai 2026",
-      "country": "FR",
+      "since": "juin 2026",
+      "country": null,
       "gifted": 0
     },
     {
+      "id": "sub-2-maxime",
       "pseudo": "@Maxime",
       "tier": "free",
       "state": "new",
+      "level": "L0",
+      "since": "juin 2026",
+      "country": "FR",
+      "gifted": 0
+    },
+    {
+      "id": "sub-3-kaelvita",
+      "pseudo": "@Kael Vita",
+      "tier": "free",
+      "state": "new",
+      "level": "L0",
+      "since": "juin 2026",
+      "country": "FR",
+      "gifted": 0
+    },
+    {
+      "id": "sub-4-daviddeshopivibes",
+      "pseudo": "@David de ShopiVibes",
+      "tier": "free",
+      "state": "new",
+      "level": "L0",
+      "since": "juin 2026",
+      "country": "ES",
+      "gifted": 0
+    },
+    {
+      "id": "sub-5-marionhalgrain2",
+      "pseudo": "@marion.halgrain2",
+      "tier": "free",
+      "state": "new",
+      "level": "L0",
+      "since": "juin 2026",
+      "country": "MT",
+      "gifted": 0
+    },
+    {
+      "id": "sub-6-corentinclichy",
+      "pseudo": "@Corentin Clichy",
+      "tier": "free",
+      "state": "new",
+      "level": "L0",
+      "since": "juin 2026",
+      "country": "FR",
+      "gifted": 0
+    },
+    {
+      "id": "sub-7-ninavalre",
+      "pseudo": "@Nina Valère",
+      "tier": "free",
+      "state": "new",
+      "level": "L0",
+      "since": "juin 2026",
+      "country": "FR",
+      "gifted": 0
+    },
+    {
+      "id": "sub-8-axechrd",
+      "pseudo": "@axechrd",
+      "tier": "free",
+      "state": "new",
+      "level": "L0",
+      "since": "juin 2026",
+      "country": "FR",
+      "gifted": 0
+    },
+    {
+      "id": "sub-9-guillaumeaubry",
+      "pseudo": "@Guillaume AUBRY",
+      "tier": "free",
+      "state": "new",
+      "level": "L0",
+      "since": "juin 2026",
+      "country": "FR",
+      "gifted": 0
+    },
+    {
+      "id": "sub-10-nicolascluzeau",
+      "pseudo": "@Nicolas Cluzeau",
+      "tier": "free",
+      "state": "new",
+      "level": "L0",
+      "since": "juin 2026",
+      "country": "FR",
+      "gifted": 0
+    },
+    {
+      "id": "sub-11-annegalle",
+      "pseudo": "@Anne-Gaëlle",
+      "tier": "free",
+      "state": "growing",
+      "level": "L0",
+      "since": "mai 2026",
+      "country": "FR",
+      "gifted": 0
+    },
+    {
+      "id": "sub-12-roso",
+      "pseudo": "@Roso",
+      "tier": "free",
+      "state": "growing",
+      "level": "L0",
+      "since": "mai 2026",
+      "country": "FR",
+      "gifted": 0
+    },
+    {
+      "id": "sub-13-tomthomas",
+      "pseudo": "@Tom Thomas",
+      "tier": "free",
+      "state": "growing",
+      "level": "L0",
+      "since": "mai 2026",
+      "country": "FR",
+      "gifted": 0
+    },
+    {
+      "id": "sub-14-maxime",
+      "pseudo": "@Maxime",
+      "tier": "free",
+      "state": "growing",
       "level": "L0",
       "since": "mai 2026",
       "country": "ES",
       "gifted": 0
     },
     {
+      "id": "sub-15-alexandresigoigne",
       "pseudo": "@Alexandre SIGOIGNE",
       "tier": "free",
-      "state": "new",
+      "state": "growing",
       "level": "L0",
       "since": "mai 2026",
       "country": "FR",
       "gifted": 0
     },
     {
+      "id": "sub-16-laurencego",
       "pseudo": "@Laurence Go",
       "tier": "free",
-      "state": "new",
+      "state": "growing",
       "level": "L0",
       "since": "avr. 2026",
       "country": "FR",
       "gifted": 0
     },
     {
+      "id": "sub-17-ucile",
       "pseudo": "@Ючил ucile",
       "tier": "free",
-      "state": "new",
+      "state": "growing",
       "level": "L0",
       "since": "avr. 2026",
       "country": "BJ",
       "gifted": 0
     },
     {
+      "id": "sub-18-almostok",
       "pseudo": "@almostoké",
       "tier": "free",
-      "state": "new",
+      "state": "growing",
       "level": "L0",
       "since": "avr. 2026",
       "country": "FR",
       "gifted": 0
     },
     {
+      "id": "sub-19-aurliebayle",
       "pseudo": "@Aurélie Bayle",
       "tier": "free",
-      "state": "new",
+      "state": "growing",
       "level": "L0",
       "since": "avr. 2026",
       "country": "FR",
       "gifted": 0
     },
     {
+      "id": "sub-20-eltchoupito",
       "pseudo": "@Eltchoupito",
       "tier": "free",
-      "state": "new",
+      "state": "growing",
       "level": "L0",
       "since": "avr. 2026",
       "country": "FR",
       "gifted": 0
     },
     {
+      "id": "sub-21-demeureprospere29",
       "pseudo": "@DemeureProspere29",
       "tier": "free",
-      "state": "new",
+      "state": "growing",
       "level": "L0",
       "since": "avr. 2026",
       "country": "FR",
       "gifted": 0
     },
     {
+      "id": "sub-22-chantallambert",
       "pseudo": "@Chantal Lambert",
       "tier": "free",
-      "state": "new",
+      "state": "growing",
       "level": "L0",
       "since": "avr. 2026",
       "country": "CA",
       "gifted": 0
     },
     {
-      "pseudo": "@La Clique des Entrepreneuses",
+      "id": "sub-23-christellemolinmabille",
+      "pseudo": "@Christelle Molin-Mabille",
       "tier": "free",
-      "state": "new",
+      "state": "growing",
       "level": "L0",
       "since": "avr. 2026",
       "country": "FR",
       "gifted": 0
     },
     {
+      "id": "sub-24-ogandagadimitri",
       "pseudo": "@OGANDAGA dimitri",
       "tier": "free",
-      "state": "new",
+      "state": "growing",
       "level": "L0",
       "since": "avr. 2026",
       "country": "CH",
       "gifted": 0
     },
     {
+      "id": "sub-25-yoann",
       "pseudo": "@Yoann",
       "tier": "free",
-      "state": "new",
+      "state": "growing",
       "level": "L0",
       "since": "avr. 2026",
       "country": "FR",
       "gifted": 0
     },
     {
+      "id": "sub-26-cedric",
       "pseudo": "@Cedric",
       "tier": "free",
-      "state": "new",
+      "state": "growing",
       "level": "L0",
       "since": "avr. 2026",
       "country": null,
       "gifted": 0
     },
     {
+      "id": "sub-27-nextunlocked",
       "pseudo": "@Next Unlocked",
       "tier": "free",
-      "state": "new",
+      "state": "growing",
       "level": "L0",
       "since": "avr. 2026",
       "country": "FR",
       "gifted": 0
     },
     {
+      "id": "sub-28-ouni",
       "pseudo": "@ouni",
       "tier": "free",
-      "state": "new",
+      "state": "growing",
       "level": "L0",
       "since": "avr. 2026",
       "country": "TN",
       "gifted": 0
     },
     {
+      "id": "sub-29-tohero",
       "pseudo": "@toHero",
       "tier": "free",
       "state": "growing",
@@ -172,6 +301,7 @@
       "gifted": 0
     },
     {
+      "id": "sub-30-alexandrebonin",
       "pseudo": "@Alexandre Bonin",
       "tier": "free",
       "state": "growing",
@@ -181,6 +311,7 @@
       "gifted": 0
     },
     {
+      "id": "sub-31-marine",
       "pseudo": "@Marine",
       "tier": "free",
       "state": "growing",
@@ -190,6 +321,7 @@
       "gifted": 0
     },
     {
+      "id": "sub-32-sonjatoussaint",
       "pseudo": "@Sonja Toussaint",
       "tier": "free",
       "state": "growing",
@@ -199,6 +331,7 @@
       "gifted": 0
     },
     {
+      "id": "sub-33-jsipolicierenpatrouille",
       "pseudo": "@Jési  - Policier en patrouille",
       "tier": "free",
       "state": "growing",
@@ -208,9 +341,10 @@
       "gifted": 0
     },
     {
+      "id": "sub-34-lucasflandre",
       "pseudo": "@Lucas Flandre",
       "tier": "free",
-      "state": "growing",
+      "state": "dormant",
       "level": "L0",
       "since": "mars 2026",
       "country": "FR",
