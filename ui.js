@@ -155,12 +155,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('fc-share').onclick = async () => {
       const btn = document.getElementById('fc-share');
+      const shareText = `Tu veux qu'on soit voisins ?\n→ ${shareUrl}`;
       try {
-        await navigator.clipboard.writeText(shareUrl);
-        btn.textContent = '✓ Lien copié !';
-        setTimeout(() => { btn.textContent = '↗ Partager mon spot'; }, 2000);
-      } catch {
-        btn.textContent = shareUrl;
+        if (navigator.share) {
+          await navigator.share({ text: shareText, url: shareUrl });
+        } else {
+          await navigator.clipboard.writeText(shareUrl);
+          btn.textContent = '✓ Lien copié !';
+          setTimeout(() => { btn.textContent = '↗ Partager mon spot'; }, 2000);
+        }
+      } catch (e) {
+        if (e.name !== 'AbortError') btn.textContent = shareUrl;
       }
     };
 
