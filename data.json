@@ -3,12 +3,12 @@
     {
       "id": "sub-0-david",
       "pseudo": "@David",
-      "tier": "free",
+      "tier": "founder",
       "state": "thriving",
-      "level": "L0",
+      "level": "L4",
       "since": "févr. 2026",
       "country": "FR",
-      "gifted": 0
+      "gifted": 15
     },
     {
       "id": "sub-1-jars",
