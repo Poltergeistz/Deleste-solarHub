@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('fc-share').onclick = async () => {
       const btn = document.getElementById('fc-share');
-      const shareText = `Tu veux qu'on soit voisins ?\n→ ${shareUrl}`;
+      const shareText = `Tu veux qu'on soit voisins ?`;
       try {
         if (navigator.share) {
           await navigator.share({ text: shareText, url: shareUrl });
